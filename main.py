@@ -14,24 +14,19 @@ app = FastAPI(
     description="An API to suggest possible conditions based on symptoms.",
     version="0.1.0",
 )
-
-# --- THIS IS THE FIX ---
-# Define the list of allowed origins (your frontend URL)
 origins = [
-    "https'://medilens-o54a.onrender.com",
+    "https://medilens-o54a.onrender.com",
     "http://localhost",
     "http://localhost:8080",
-    # Add any other origins you might test from, like a local development server
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"], # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"], # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-# --- END OF FIX ---
 
 
 @app.on_event("startup")
