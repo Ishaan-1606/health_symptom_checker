@@ -1,5 +1,7 @@
+# main.py
 from typing import Optional, List
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Depends
+from fastapi.middleware.cors import CORSMiddleware # Import the CORS middleware
 from schemas import SymptomCheckRequest, UserCreate, User
 from services import gemini_service, location_service
 from services.supabase_service import supabase_service
@@ -13,6 +15,25 @@ app = FastAPI(
     version="0.1.0",
 )
 
+# --- THIS IS THE FIX ---
+# Define the list of allowed origins (your frontend URL)
+origins = [
+    "https'://medilens-o54a.onrender.com",
+    "http://localhost",
+    "http://localhost:8080",
+    # Add any other origins you might test from, like a local development server
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"], # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"], # Allows all headers
+)
+# --- END OF FIX ---
+
+
 @app.on_event("startup")
 async def startup_supabase_client():
     supabase_service.initialize_client()
@@ -21,6 +42,7 @@ async def startup_supabase_client():
 def read_root():
     return {"message": "Symptom Checker API is running!"}
 
+# ... (the rest of your main.py file remains exactly the same)
 @app.post("/signup", response_model=User)
 async def create_user(user: UserCreate):
     db_user = supabase_service.create_user(user)

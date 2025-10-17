@@ -5,6 +5,9 @@ __pycache__/
 # Environment Variables
 .env
 
+# Node.js
+node_modules/
+
 # IDE / OS specific
 .vscode/
 .idea/
